@@ -1,8 +1,7 @@
 // context/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-
-const API_URL = 'https://juice-social-app.onrender.com';
+import API_BASE_URL from '../utils/api';
 
 export const AuthContext = createContext();
 
@@ -28,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   // Fetch current user data
   const fetchCurrentUser = async () => {
     try {
-      const res = await axios.get(`${API_URL}/auth/me`);
+      const res = await axios.get(`${API_BASE_URL}/api/auth/me`);
       setCurrentUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       setLoading(false);
@@ -43,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/auth/register`, userData);
+      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, userData);
       const { token, user } = res.data;
       
       localStorage.setItem('token', token);
@@ -65,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, credentials);
+      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, credentials);
       const { token, user } = res.data;
       
       localStorage.setItem('token', token);
@@ -88,7 +87,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Call logout API if user is logged in
       if (currentUser) {
-        await axios.post(`${API_URL}/auth/logout`);
+        await axios.post(`${API_BASE_URL}/api/auth/logout`);
       }
     } catch (error) {
       console.error('Error during logout:', error);
@@ -104,7 +103,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (profileData) => {
     setLoading(true);
     try {
-      const res = await axios.put(`${API_URL}/auth/profile`, profileData);
+      const res = await axios.put(`${API_BASE_URL}/api/auth/profile`, profileData);
       setCurrentUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       setLoading(false);
@@ -120,7 +119,7 @@ export const AuthProvider = ({ children }) => {
   const changePassword = async (passwordData) => {
     setLoading(true);
     try {
-      await axios.put(`${API_URL}/auth/change-password`, passwordData);
+      await axios.put(`${API_BASE_URL}/api/auth/change-password`, passwordData);
       setLoading(false);
       return { success: true };
     } catch (error) {
