@@ -25,15 +25,14 @@ const server = http.createServer(app);
 // Setup Socket.IO with proper CORS for production
 const io = socketIo(server, {
   cors: {
-    origin: [ 
-      'https://juice-social-c61y7m2sk-alis-projects-1ef90113.vercel.app',
+    origin: [
+      'https://juice-social-yfc8ju2c-alis-projects-1ef90113.vercel.app',
       'https://juice-social-app.vercel.app',
       'http://localhost:5173'
     ],
     methods: ['GET', 'POST'],
     credentials: true
   }
-});
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -41,15 +40,14 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Configure CORS for the REST API
 app.use(cors({
   origin: [
-    'https://juice-social-c61y7m2sk-alis-projects-1ef90113.vercel.app', 
-    'https://juice-social-app.vercel.app',  // Add your production domain
-    'http://localhost:5173'  // Keep this for local development
+    'https://juice-social-yfc8ju2c-alis-projects-1ef90113.vercel.app',  // Add your specific Vercel URL
+    'https://juice-social-app.vercel.app',
+    'http://localhost:5173'
   ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
-
 // Setup upload directory
 const uploadsDir = path.join(__dirname, 'uploads');
 const fs = require('fs');
