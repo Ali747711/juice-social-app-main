@@ -1,0 +1,267 @@
+/* Navbar.module.css */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  z-index: 1000;
+  border-bottom: 1px solid var(--gray-200);
+  box-shadow: 0 1px 10px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.95);
+  height: 70px; /* Fixed height */
+}
+
+.dark .navbar {
+  background-color: rgba(30, 30, 46, 0.95);
+  border-bottom: 1px solid var(--gray-700);
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  margin-right: 1.5rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.logoIcon {
+  font-size: 2rem;
+  color: var(--juice-primary);
+  margin-right: 0.5rem;
+  animation: pulse 3s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.logoText {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--juice-primary);
+  letter-spacing: 0.5px;
+}
+
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Increased gap between nav items */
+}
+
+.navLink {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 0.75rem;
+  color: var(--gray-600);
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.navLink:hover {
+  color: var(--juice-primary);
+  background-color: rgba(93, 95, 239, 0.05);
+  transform: translateY(-2px);
+}
+
+.navLink::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--juice-primary);
+  transition: all 0.2s ease;
+  transform: translateX(-50%);
+}
+
+.navLink:hover::after {
+  width: 20px;
+}
+
+.dark .navLink {
+  color: var(--gray-400);
+}
+
+.dark .navLink:hover {
+  color: var(--juice-secondary);
+  background-color: rgba(93, 95, 239, 0.1);
+}
+
+.active {
+  color: var(--juice-primary) !important;
+}
+
+.active::after {
+  width: 20px;
+}
+
+.dark .active {
+  color: var(--juice-secondary) !important;
+}
+
+.icon {
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+  transition: transform 0.2s ease;
+}
+
+.navLink:hover .icon {
+  transform: scale(1.1);
+}
+
+.linkText {
+  font-size: 0.75rem;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.iconButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--gray-600);
+  transition: all 0.2s ease;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  background-color: rgba(93, 95, 239, 0.1);
+  color: var(--juice-primary);
+  transform: translateY(-2px);
+}
+
+.themeIcon {
+  font-size: 1.25rem;
+  transition: transform 0.3s ease;
+}
+
+.iconButton:hover .themeIcon {
+  transform: rotate(30deg);
+}
+
+.dark .iconButton {
+  color: var(--gray-400);
+}
+
+.dark .iconButton:hover {
+  background-color: rgba(93, 95, 239, 0.15);
+  color: var(--juice-secondary);
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  margin-left: 0.5rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.profileButton:hover {
+  transform: scale(1.05);
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--juice-primary);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.badgeContainer {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: var(--red-500);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 600;
+  min-width: 18px;
+  height: 18px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+}
+
+/* Mobile navbar (for small screens) */
+@media (max-width: 768px) {
+  .navbar {
+    top: auto;
+    bottom: 0;
+    border-top: 1px solid var(--gray-200);
+    border-bottom: none;
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.05);
+    height: 60px;
+  }
+
+  .dark .navbar {
+    border-top: 1px solid var(--gray-700);
+    border-bottom: none;
+  }
+
+  .container {
+    padding: 0 0.5rem;
+  }
+
+  .logoContainer {
+    display: none;
+  }
+
+  .navLinks {
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .navLink {
+    padding: 0.25rem 0.5rem;
+  }
+
+  .rightSection {
+    display: none;
+  }
+}

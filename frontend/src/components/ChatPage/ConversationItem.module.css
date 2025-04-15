@@ -1,0 +1,118 @@
+/* src/components/ChatPage/ConversationItem.module.css */
+.conversationItem {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+  }
+  
+  .conversationItem:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .conversationItem.active {
+    background-color: rgba(99, 102, 241, 0.1);
+  }
+  
+  .avatarWrapper {
+    position: relative;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  
+  .avatarImage {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .fallbackAvatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6366f1;
+    color: white;
+    font-weight: 600;
+    font-size: 1rem;
+    border: 2px solid #ffffff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.statusIndicator {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: #10b981;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  bottom: 0;
+  right: 0;
+}
+
+.conversationInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.conversationHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.conversationName {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.conversationTime {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.messagePreview {
+  font-size: 0.85rem;
+  color: #6b7280;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.youPrefix {
+  color: #6366f1;
+  font-weight: 500;
+}
+
+.unreadBadge {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  min-width: 20px;
+  height: 20px;
+  background-color: #6366f1;
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 5px;
+}

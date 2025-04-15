@@ -1,0 +1,139 @@
+/* /frontend/components/ChatPage/EmojiPicker.module.css */
+.emojiPickerContainer {
+  position: absolute;
+  bottom: 50px; /* Position above the message input */
+  right: 0;
+  width: 320px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  z-index: 1000; /* Ensure it's above other elements */
+  max-height: 350px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  animation: fadeInUp 0.2s ease;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.emojiPickerHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 2;
+}
+
+.emojiPickerTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+
+.closeButton:hover {
+  background-color: #f3f4f6;
+}
+
+.emojiPickerBody {
+  padding: 12px;
+}
+
+.emojiCategory {
+  margin-bottom: 16px;
+}
+
+.categoryName {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.emojiGrid {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 6px;
+}
+
+.emojiButton {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.emojiButton:hover {
+  background-color: #f3f4f6;
+  transform: scale(1.2);
+}
+
+/* Scrollbar styling */
+.emojiPickerContainer::-webkit-scrollbar {
+  width: 6px;
+}
+
+.emojiPickerContainer::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.emojiPickerContainer::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+  border-radius: 3px;
+}
+
+.emojiPickerContainer::-webkit-scrollbar-thumb:hover {
+  background-color: #9ca3af;
+}
+
+/* Fix for small screens to avoid overflow */
+@media (max-width: 576px) {
+  .emojiPickerContainer {
+    width: 280px;
+    right: -100px;
+  }
+  
+  /* Fix for very small screens */
+  @media (max-width: 400px) {
+    .emojiPickerContainer {
+      width: 260px;
+      right: -150px;
+      bottom: 60px;
+    }
+  }
+}

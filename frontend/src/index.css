@@ -1,0 +1,199 @@
+/* src/index.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@import './styles/variables.css';
+@import './styles/layout.css';
+@import './styles/components.css';
+@import './styles/utils.css';
+
+/* Global styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Base CSS Variables */
+:root {
+  /* Theme colors - will be overridden by ThemeContext */
+  --juice-primary: #5D5FEF; /* Vibrant purple-blue */
+  --juice-primary-hover: #4B4DDC;
+  --juice-secondary: #A5A6F6;
+  --juice-dark: #1E1E2E;
+  --juice-light: #F8F9FC;
+  
+  /* Base font size - will be overridden by ThemeContext */
+  --base-font-size: 16px;
+  
+  /* Gray scale */
+  --gray-50: #F9FAFB;
+  --gray-100: #F3F4F6;
+  --gray-200: #E5E7EB;
+  --gray-300: #D1D5DB;
+  --gray-400: #9CA3AF;
+  --gray-500: #6B7280;
+  --gray-600: #4B5563;
+  --gray-700: #374151;
+  --gray-800: #1F2937;
+  --gray-900: #111827;
+  
+  /* Other color variables */
+  --red-500: #EF4444;
+  --green-500: #10B981;
+  --blue-500: #3B82F6;
+  
+  /* Transition variables */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  
+  /* Shadow variables */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  
+  /* Border radius variables */
+  --radius-sm: 0.25rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-full: 9999px;
+}
+
+html, body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--gray-50);
+  color: var(--gray-800);
+  margin: 0;
+  min-height: 100vh;
+  font-size: var(--base-font-size);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Dark mode styles */
+html.dark, body.dark-mode {
+  background-color: var(--gray-900);
+  color: var(--gray-100);
+}
+
+/* Content wrappers - these will change with dark/light mode */
+.juice-card, 
+.card, 
+.content-section,
+.message-bubble,
+.sidebar-section,
+.navbar {
+  background-color: white;
+  color: var(--gray-800);
+  border-radius: var(--radius);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Dark mode applies only to content components */
+.dark-mode .juice-card,
+.dark-mode .card,
+.dark-mode .content-section,
+.dark-mode .message-bubble,
+.dark-mode .sidebar-section,
+.dark-mode .navbar {
+  background-color: var(--gray-800);
+  color: var(--gray-100);
+}
+
+/* Page container has no background but defines width constraints */
+.page-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Button styles */
+.btn {
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary {
+  background-color: var(--juice-primary);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background-color: var(--juice-primary-hover);
+  opacity: 0.9;
+}
+
+.btn-secondary {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.btn-secondary:hover {
+  background-color: #e5e7eb;
+}
+
+/* Form elements */
+.input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  font-family: inherit;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--juice-primary);
+  box-shadow: 0 0 0 3px rgba(93, 95, 239, 0.1);
+}
+
+/* Card */
+.card {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Accent color elements */
+.juice-primary-text {
+  color: var(--juice-primary);
+}
+
+.juice-primary-bg {
+  background-color: var(--juice-primary);
+  color: white;
+}
+
+/* Dark mode component styles */
+.dark-mode .input {
+  background-color: var(--gray-800);
+  border-color: var(--gray-700);
+  color: var(--gray-100);
+}
+
+.dark-mode .btn-secondary {
+  background-color: var(--gray-700);
+  color: var(--gray-200);
+  border-color: var(--gray-600);
+}
+
+.dark-mode .btn-secondary:hover {
+  background-color: var(--gray-600);
+}

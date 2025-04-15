@@ -1,0 +1,158 @@
+/* Avatar.module.css */
+.avatarContainer {
+  position: relative;
+  display: inline-block;
+}
+
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: var(--gray-200);
+  transition: transform 0.2s ease;
+}
+
+.sm {
+  width: 32px;
+  height: 32px;
+}
+
+.md {
+  width: 40px;
+  height: 40px;
+}
+
+.lg {
+  width: 56px;
+  height: 56px;
+}
+
+.xl {
+  width: 80px;
+  height: 80px;
+}
+
+.xxl {
+  width: 120px;
+  height: 120px;
+}
+
+.border {
+  border: 2px solid white;
+}
+
+.dark .border {
+  border-color: var(--gray-800);
+}
+
+.primaryBorder {
+  border: 2px solid var(--juice-primary);
+}
+
+.statusIndicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid white;
+  background-color: var(--gray-400);
+}
+
+.dark .statusIndicator {
+  border-color: var(--gray-800);
+}
+
+.online {
+  background-color: var(--green-500);
+}
+
+.avatarContainer:hover .avatar {
+  transform: scale(1.05);
+}
+
+.initialsAvatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--juice-primary);
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.sm.initialsAvatar {
+  font-size: 12px;
+}
+
+.md.initialsAvatar {
+  font-size: 14px;
+}
+
+.lg.initialsAvatar {
+  font-size: 18px;
+}
+
+.xl.initialsAvatar {
+  font-size: 24px;
+}
+
+.xxl.initialsAvatar {
+  font-size: 36px;
+}
+
+/* Edit button */
+.editButton {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--juice-primary);
+  color: white;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2;
+  padding: 0;
+}
+
+.dark .editButton {
+  border-color: var(--gray-800);
+}
+
+.lg ~ .editButton,
+.xl ~ .editButton {
+  width: 30px;
+  height: 30px;
+}
+
+.xxl ~ .editButton {
+  width: 36px;
+  height: 36px;
+}
+
+.editButton svg {
+  width: 14px;
+  height: 14px;
+}
+
+.lg ~ .editButton svg,
+.xl ~ .editButton svg {
+  width: 16px;
+  height: 16px;
+}
+
+.xxl ~ .editButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.editButton:hover {
+  transform: scale(1.1);
+  background-color: var(--juice-primary-hover);
+}

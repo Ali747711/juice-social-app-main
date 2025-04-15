@@ -1,0 +1,184 @@
+/* Login.module.css */
+
+.loginPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #4f46e5, #4355b3);
+  padding: 2rem;
+}
+
+.loginContainer {
+  display: flex;
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  max-width: 900px;
+  width: 100%;
+  min-height: 500px;
+  position: relative;
+}
+
+.leftSide {
+  flex: 1;
+  background-color: #4b59f7;
+  color: white;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoContainer {
+  text-align: center;
+}
+
+.logoImage {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+}
+
+.logoText {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.rightSide {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background-color: white;
+}
+
+.toggleBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.toggleIcon {
+  font-size: 1.25rem;
+  color: #6b7280;
+}
+
+.signInTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+  text-align: center;
+}
+
+.errorMessage {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.inputGroup {
+  margin-bottom: 1rem;
+}
+
+.buttonContainer {
+  margin-top: 1rem;
+}
+
+.goButton {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.footer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.footerLink {
+  color: #4f46e5;
+  text-decoration: none;
+}
+
+.footerLink:hover {
+  text-decoration: underline;
+}
+
+/* 🌙 DARK MODE OVERRIDES */
+.dark .loginContainer {
+  background-color: #1e1e2f;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.dark .leftSide {
+  background-color: #292b45;
+  color: white;
+}
+
+.dark .rightSide {
+  background-color: #1e1e2f;
+}
+
+.dark .signInTitle {
+  color: #e5e7eb;
+}
+
+.dark .footer {
+  color: #9ca3af;
+}
+
+.dark .footerLink {
+  color: #a5b4fc;
+}
+
+@media (max-width: 768px) {
+  .loginContainer {
+    flex-direction: column;
+    border-radius: 0.5rem;
+  }
+
+  .leftSide,
+  .rightSide {
+    width: 100%;
+    padding: 2rem;
+  }
+
+  .logoText {
+    font-size: 2.5rem;
+  }
+}
+
+.emojiIcon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: pop 0.4s ease;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

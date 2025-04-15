@@ -1,0 +1,91 @@
+/* /frontend/components/ChatPage/AvatarDisplay.module.css */
+.avatarContainer {
+    position: relative;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+  
+  .avatarSmall {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .avatarMedium {
+    width: 48px;
+    height: 48px;
+  }
+  
+  .avatarLarge {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .avatarXlarge {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Ensures the image covers the area without distortion */
+  }
+  
+  .avatarFallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6366f1;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .avatarSmall .avatarFallback {
+    font-size: 12px;
+  }
+  
+  .avatarMedium .avatarFallback {
+    font-size: 16px;
+  }
+  
+  .avatarLarge .avatarFallback {
+    font-size: 24px;
+  }
+  
+  .avatarXlarge .avatarFallback {
+    font-size: 32px;
+  }
+  
+  /* Status indicator */
+  .statusIndicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid white;
+  }
+  
+  .avatarSmall .statusIndicator {
+    width: 8px;
+    height: 8px;
+    border-width: 1.5px;
+  }
+  
+  .avatarLarge .statusIndicator,
+  .avatarXlarge .statusIndicator {
+    width: 14px;
+    height: 14px;
+    border-width: 2.5px;
+  }
+  
+  .online {
+    background-color: #10b981; /* Green */
+  }
+  
+  .offline {
+    background-color: #9ca3af; /* Gray */
+  }

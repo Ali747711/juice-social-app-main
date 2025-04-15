@@ -1,0 +1,457 @@
+/* Profile.module.css */
+.container {
+  padding-top: 80px; /* Fix navbar overlap */
+  padding-bottom: 3rem;
+  background-color: #f9fafb;
+  min-height: 100vh;
+}
+
+.profileWrapper {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  padding: 0 1.5rem;
+}
+
+/* Sidebar Styles */
+.profileSidebar {
+  width: 300px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  position: sticky;
+  top: 100px;
+}
+
+.profileHeader {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #ffffff;
+  position: relative;
+}
+
+.avatarContainer {
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.userInfo {
+  text-align: center;
+  width: 100%;
+}
+
+.userName {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.userHandle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.sidebarMenu {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 1.5rem;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #4b5563;
+}
+
+.menuItem:hover {
+  background-color: #f3f4f6;
+  color: #6366f1;
+}
+
+.menuItem.active {
+  background-color: #f3f4f6;
+  color: #6366f1;
+  border-left: 3px solid #6366f1;
+}
+
+.menuIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  margin-right: 1rem;
+  font-size: 1rem;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.menuItem:hover .menuIcon,
+.menuItem.active .menuIcon {
+  background-color: #e0e7ff;
+  color: #6366f1;
+}
+
+/* Content Styles */
+.profileContent {
+  flex: 1;
+  max-width: 750px;
+}
+
+.contentSection {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Form Styles */
+.formGroup {
+  margin-bottom: 1.5rem;
+}
+
+.formLabel {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #4b5563;
+  margin-bottom: 0.5rem;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  color: #1f2937;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.formInput:hover,
+.formTextarea:hover {
+  border-color: #d1d5db;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+  background-color: #ffffff;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.formActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.primaryButton,
+.secondaryButton {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.primaryButton {
+  background-color: #6366f1;
+  color: white;
+  border: none;
+}
+
+.primaryButton:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.primaryButton:disabled {
+  background-color: #a5b4fc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.secondaryButton {
+  background-color: transparent;
+  color: #6b7280;
+  border: 1px solid #e5e7eb;
+}
+
+.secondaryButton:hover {
+  background-color: #f3f4f6;
+  border-color: #d1d5db;
+  color: #4b5563;
+}
+
+/* Success and Error messages */
+.successMessage,
+.errorMessage {
+  padding: 0.875rem 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.successMessage {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.successIcon {
+  color: #10b981;
+}
+
+.errorMessage {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.errorText {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin: 0.5rem 0 0 0;
+}
+
+/* Preferences Styles */
+.preferenceItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f9fafb;
+  margin-bottom: 1rem;
+}
+
+.preferenceInfo {
+  flex: 1;
+}
+
+.preferenceTitle {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #1f2937;
+  margin: 0 0 0.25rem 0;
+}
+
+.preferenceDescription {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Toggle Switch */
+.toggleContainer {
+  position: relative;
+  width: 50px;
+  height: 26px;
+}
+
+.toggleInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #e5e7eb;
+  transition: .4s;
+  border-radius: 26px;
+}
+
+.toggleSlider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.toggleInput:checked + .toggleSlider {
+  background-color: #6366f1;
+}
+
+.toggleInput:checked + .toggleSlider:before {
+  transform: translateX(24px);
+}
+
+/* Dark mode styles */
+:global(.dark) .container {
+  background-color: #111827;
+}
+
+:global(.dark) .profileSidebar,
+:global(.dark) .contentSection {
+  background-color: #1f2937;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+:global(.dark) .profileHeader {
+  background-color: #1f2937;
+}
+
+:global(.dark) .userName {
+  color: #f9fafb;
+}
+
+:global(.dark) .userHandle {
+  color: #9ca3af;
+}
+
+:global(.dark) .menuItem {
+  color: #d1d5db;
+}
+
+:global(.dark) .menuItem:hover {
+  background-color: #374151;
+  color: #a5b4fc;
+}
+
+:global(.dark) .menuItem.active {
+  background-color: #374151;
+  color: #a5b4fc;
+  border-left-color: #a5b4fc;
+}
+
+:global(.dark) .menuIcon {
+  background-color: #374151;
+}
+
+:global(.dark) .menuItem:hover .menuIcon,
+:global(.dark) .menuItem.active .menuIcon {
+  background-color: #4b5563;
+  color: #a5b4fc;
+}
+
+:global(.dark) .sectionTitle {
+  color: #f9fafb;
+  border-bottom-color: #374151;
+}
+
+:global(.dark) .formLabel {
+  color: #d1d5db;
+}
+
+:global(.dark) .formInput,
+:global(.dark) .formTextarea {
+  background-color: #374151;
+  border-color: #4b5563;
+  color: #f9fafb;
+}
+
+:global(.dark) .formInput:hover,
+:global(.dark) .formTextarea:hover {
+  border-color: #6b7280;
+}
+
+:global(.dark) .formInput:focus,
+:global(.dark) .formTextarea:focus {
+  border-color: #a5b4fc;
+  background-color: #4b5563;
+}
+
+:global(.dark) .secondaryButton {
+  color: #d1d5db;
+  border-color: #4b5563;
+}
+
+:global(.dark) .secondaryButton:hover {
+  background-color: #374151;
+  border-color: #6b7280;
+  color: #f9fafb;
+}
+
+:global(.dark) .preferenceItem {
+  background-color: #374151;
+}
+
+:global(.dark) .preferenceTitle {
+  color: #f9fafb;
+}
+
+:global(.dark) .preferenceDescription {
+  color: #9ca3af;
+}
+
+:global(.dark) .toggleSlider {
+  background-color: #4b5563;
+}
+
+/* Responsive styles */
+@media (max-width: 900px) {
+  .profileWrapper {
+    flex-direction: column;
+  }
+  
+  .profileSidebar {
+    width: 100%;
+    position: static;
+  }
+  
+  .profileHeader {
+    padding: 1.5rem 1rem;
+  }
+  
+  .formActions {
+    flex-direction: column;
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}

@@ -1,0 +1,107 @@
+/* src/components/ChatPage/MessageList.module.css */
+.messagesContainer {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    background-image: 
+      radial-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+      radial-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: 0 0, 10px 10px;
+  }
+  
+  .messagesList {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .messageWrapper {
+    margin-bottom: 16px;
+  }
+  
+  .dateHeader {
+    text-align: center;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+  
+  .dateHeader::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: #e5e7eb;
+    z-index: 0;
+  }
+  
+  .dateLabel {
+    position: relative;
+    background-color: #f9fafb;
+    padding: 4px 16px;
+    font-size: 0.75rem;
+    color: #9ca3af;
+    border-radius: 16px;
+    z-index: 1;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  
+  .loadingSpinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #f3f4f6;
+    border-radius: 50%;
+    border-top: 3px solid #6366f1;
+    animation: spin 1s linear infinite;
+    margin-bottom: 0.75rem;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .loadingText {
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+  
+  .emptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .emptyStateIcon {
+    font-size: 2.5rem;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+  }
+  
+  .emptyStateTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .emptyStateText {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+    max-width: 300px;
+  }

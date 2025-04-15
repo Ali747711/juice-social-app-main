@@ -1,0 +1,194 @@
+/* components/AvatarManager.module.css */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+  
+  .modal {
+    background-color: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    animation: slideUp 0.3s ease;
+  }
+  
+  .modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .modalTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin: 0;
+  }
+  
+  .closeButton {
+    background: none;
+    border: none;
+    color: #6b7280;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  
+  .closeButton:hover {
+    background-color: #f3f4f6;
+    color: #ef4444;
+  }
+  
+  .modalContent {
+    padding: 24px;
+  }
+  
+  .avatarPreview {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  
+  .previewImage,
+  .currentAvatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #6366f1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .avatarPlaceholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #6366f1;
+    color: white;
+    font-size: 3rem;
+    font-weight: 600;
+    border: 3px solid #6366f1;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .errorMessage {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .actionButtons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+  }
+  
+  .uploadButton,
+  .deleteButton,
+  .confirmButton,
+  .cancelButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+  }
+  
+  .uploadButton {
+    background-color: #6366f1;
+    color: white;
+    border: none;
+  }
+  
+  .uploadButton:hover {
+    background-color: #4f46e5;
+    transform: translateY(-2px);
+  }
+  
+  .deleteButton {
+    background-color: transparent;
+    color: #ef4444;
+    border: 1px solid #ef4444;
+  }
+  
+  .deleteButton:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    transform: translateY(-2px);
+  }
+  
+  .confirmButton {
+    background-color: #10b981;
+    color: white;
+    border: none;
+  }
+  
+  .confirmButton:hover {
+    background-color: #059669;
+    transform: translateY(-2px);
+  }
+  
+  .cancelButton {
+    background-color: transparent;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+  }
+  
+  .cancelButton:hover {
+    background-color: #f3f4f6;
+    transform: translateY(-2px);
+  }
+  
+  .uploadButton:disabled,
+  .deleteButton:disabled,
+  .confirmButton:disabled,
+  .cancelButton:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+  
+  .hiddenInput {
+    display: none;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }

@@ -1,0 +1,66 @@
+/* Card.module.css */
+.card {
+  background-color: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, var(--juice-primary), var(--juice-secondary));
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
+.dark .card {
+  background-color: var(--gray-800);
+  border-color: var(--gray-700);
+}
+
+.withPadding {
+  padding: 1.5rem;
+}
+
+.hover {
+  cursor: pointer;
+}
+
+.hover:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
+}
+
+.header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.body {
+  padding: 1.5rem;
+}
+
+.footer {
+  padding: 1.25rem 1.5rem;
+  border-top: 1px solid var(--gray-200);
+}
+
+.dark .header,
+.dark .footer {
+  border-color: var(--gray-700);
+}

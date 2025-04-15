@@ -1,0 +1,292 @@
+/* src/components/ChatPage/MessageBubble.module.css */
+.messageBubble {
+  display: flex;
+  margin-bottom: 12px;
+  max-width: 70%;
+  position: relative;
+}
+
+.messageBubble.sent {
+  margin-left: auto;
+  justify-content: flex-end;
+}
+
+.messageBubble.received {
+  margin-right: auto;
+  justify-content: flex-start;
+}
+
+.messageContent {
+  padding: 12px 16px;
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.sent .messageContent {
+  background-color: #6366f1;
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.received .messageContent {
+  background-color: #f3f4f6;
+  color: #1f2937;
+  border-bottom-left-radius: 4px;
+}
+
+.messageText {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.messageInfo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 6px;
+  gap: 6px;
+}
+
+.messageTime {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+.readStatus {
+  font-size: 0.7rem;
+  opacity: 0.8;
+}
+
+.read {
+  color: #34d399;
+}
+
+/* File attachment styles */
+.attachmentsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.attachment {
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.received .attachment {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Image attachment */
+.imageAttachment {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.attachmentImage {
+  width: 100%;
+  height: auto;
+  max-height: 250px;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.attachmentImage:hover {
+  transform: scale(1.02);
+}
+
+/* Video attachment */
+.videoAttachment {
+  width: 100%;
+  max-width: 300px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.attachmentVideo {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  display: block;
+  border-radius: 8px;
+}
+
+/* File attachment */
+.fileAttachment {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  width: 100%;
+  max-width: 300px;
+}
+
+.received .fileAttachment {
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.fileIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.received .fileIcon {
+  background-color: #f3f4f6;
+  color: #6366f1;
+}
+
+.fileDetails {
+  flex: 1;
+  min-width: 0;
+}
+
+.fileName {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fileSize {
+  display: block;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.downloadButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.received .downloadButton {
+  background-color: #f3f4f6;
+  color: #6366f1;
+}
+
+.downloadButton:hover {
+  transform: scale(1.1);
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.received .downloadButton:hover {
+  background-color: #e5e7eb;
+}
+
+/* Expanded image styles */
+.expandedImageOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  cursor: pointer;
+  animation: fadeIn 0.3s ease;
+}
+
+.expandedImageContainer {
+  position: relative;
+  max-width: 90%;
+  max-height: 90%;
+  background-color: transparent;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.expandedImage {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 4px;
+  cursor: default;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+  z-index: 1001;
+}
+
+.closeButton:hover {
+  background-color: rgba(0, 0, 0, 0.7);
+  transform: scale(1.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .messageBubble {
+    max-width: 85%;
+  }
+  
+  .imageAttachment,
+  .videoAttachment,
+  .fileAttachment {
+    max-width: 250px;
+  }
+  
+  .closeButton {
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+  }
+}

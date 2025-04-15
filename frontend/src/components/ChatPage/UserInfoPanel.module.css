@@ -1,0 +1,222 @@
+/* /frontend/components/ChatPage/UserInfoPanel.module.css */
+.panel {
+  width: 320px;
+  height: 100%;
+  border-left: 1px solid #e5e7eb;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #f3f4f6;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: #e5e7eb;
+  color: #4b5563;
+}
+
+.content {
+  padding: 24px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  flex: 1;
+}
+
+.profileSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.fullName {
+  margin: 16px 0 0 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.username {
+  margin: 4px 0 8px 0;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #9ca3af; /* Gray for offline */
+}
+
+.statusDot.online {
+  background-color: #10b981; /* Green for online */
+}
+
+.details {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #4b5563;
+}
+
+.detailIcon {
+  font-size: 16px;
+}
+
+.bioSection {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 20px;
+}
+
+.sectionTitle {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.bioText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4b5563;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.actionButtonPrimary,
+.actionButtonSecondary,
+.actionButtonTertiary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.actionButtonPrimary {
+  background-color: #6366f1;
+  color: white;
+}
+
+.actionButtonPrimary:hover {
+  background-color: #4f46e5;
+}
+
+.actionButtonSecondary {
+  background-color: #f3f4f6;
+  color: #1f2937;
+}
+
+.actionButtonSecondary:hover {
+  background-color: #e5e7eb;
+}
+
+.actionButtonTertiary {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.actionButtonTertiary:hover {
+  background-color: #e5e7eb;
+}
+
+.danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.danger:hover {
+  background-color: #dc2626;
+}
+
+.active {
+  background-color: #10b981;
+  color: white;
+}
+
+.active:hover {
+  background-color: #059669;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 768px) {
+  .panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  }
+}

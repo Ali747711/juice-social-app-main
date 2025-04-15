@@ -1,0 +1,233 @@
+/* Register.module.css */
+
+.registerPage {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom right, #4f46e5, #4355b3);
+  padding: 2rem;
+}
+
+.registerContainer {
+  display: flex;
+  background-color: white;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  max-width: 900px;
+  width: 100%;
+  min-height: 500px;
+  position: relative;
+}
+
+.leftSide {
+  flex: 1;
+  background-color: #4b59f7;
+  color: white;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.logoContainer {
+  text-align: center;
+}
+
+.emojiIcon {
+  font-size: 5rem;
+  margin-bottom: 1rem;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+  animation: pop 0.4s ease;
+}
+
+.logoText {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.tagline {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.rightSide {
+  flex: 1;
+  padding: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+  background-color: white;
+}
+
+.toggleBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.toggleIcon {
+  font-size: 1.25rem;
+  color: #6b7280;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #1f2937;
+  text-align: center;
+}
+
+.errorMessage {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #dc2626;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.formGroup {
+  margin-bottom: 1rem;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.formInput {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.formInput:focus {
+  outline: none;
+  border-color: #4b59f7;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.errorText {
+  color: #dc2626;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.buttonContainer {
+  margin-top: 1.5rem;
+}
+
+.registerButton {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #4b59f7;
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.registerButton:hover {
+  background-color: #4338ca;
+}
+
+.registerButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.loginLinkContainer {
+  margin-top: 2rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.loginLink {
+  color: #4f46e5;
+  text-decoration: none;
+}
+
+.loginLink:hover {
+  text-decoration: underline;
+}
+
+/* 🌙 DARK MODE OVERRIDES */
+.dark .registerContainer {
+  background-color: #1e1e2f;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+.dark .leftSide {
+  background-color: #292b45;
+  color: white;
+}
+
+.dark .rightSide {
+  background-color: #1e1e2f;
+}
+
+.dark .title {
+  color: #e5e7eb;
+}
+
+.dark .formLabel {
+  color: #d1d5db;
+}
+
+.dark .loginLinkContainer {
+  color: #9ca3af;
+}
+
+.dark .loginLink {
+  color: #a5b4fc;
+}
+
+@media (max-width: 768px) {
+  .registerContainer {
+    flex-direction: column;
+    border-radius: 0.5rem;
+  }
+
+  .leftSide,
+  .rightSide {
+    width: 100%;
+    padding: 2rem;
+  }
+
+  .logoText {
+    font-size: 2.5rem;
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}

@@ -1,0 +1,49 @@
+/* Layout.module.css */
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--gray-50); /* Light background for the main layout */
+}
+
+.content {
+  flex: 1;
+  padding-top: 70px; /* Space for fixed navbar */
+  position: relative;
+  min-height: calc(100vh - 70px);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  background-color: transparent; /* Don't affect the page background */
+}
+
+.contentInner {
+  /* This element should have a constrained width */
+  max-width: 1100px; /* Set max-width to match Home page */
+  margin: 0 auto; /* Center the content */
+  padding: 1rem; /* Add padding */
+  width: 100%;
+  transition: all 0.3s ease;
+  background-color: transparent; /* Keep transparent to not affect page content */
+}
+
+/* Dark mode styles */
+:global(.dark-mode) .layout {
+  background-color: var(--gray-900); /* Dark background for the entire app */
+}
+
+:global(.dark-mode) .content,
+:global(.dark-mode) .contentInner {
+  background-color: transparent; /* Keep transparent to not affect page content */
+}
+
+/* Media queries for responsive layout */
+@media (max-width: 768px) {
+  .content {
+    padding-top: 0;
+    padding-bottom: 60px; /* Space for bottom navbar on mobile */
+  }
+  
+  .contentInner {
+    padding: 0.75rem; /* Smaller padding on mobile */
+  }
+}
