@@ -32,7 +32,9 @@ const io = socketIo(server, {
     ],
     methods: ['GET', 'POST'],
     credentials: true
-  };
+  }
+}); // Added closing bracket here
+
 // Middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -48,6 +50,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 }));
+
 // Setup upload directory
 const uploadsDir = path.join(__dirname, 'uploads');
 const fs = require('fs');
