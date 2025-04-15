@@ -25,8 +25,7 @@ const server = http.createServer(app);
 // Setup Socket.IO with proper CORS for production
 const io = socketIo(server, {
   cors: {
-    origin: [
-      'https://juice-social-c61y7m2sk-alis-projects-1ef90113.vercel.app', 
+    origin: [ 
       'https://juice-social-app.vercel.app',
       'http://localhost:5173'
     ],
