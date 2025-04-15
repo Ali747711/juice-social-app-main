@@ -1,6 +1,5 @@
 // src/utils/api.js
-const API_BASE_URL = 'https://juice-social-app.onrender.com'; // Replace with your actual backend URL
-const BASE_URL = import.meta.env.VITE_API_URL;
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://juice-social-app.onrender.com';
 
 export const API_URLS = {
   login: `${API_BASE_URL}/api/auth/login`,
