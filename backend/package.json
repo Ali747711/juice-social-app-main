@@ -21,4 +21,8 @@
   "devDependencies": {
     "nodemon": "^2.0.22"
   }
+  "dependencies": {
+  "multer": "^1.4.5-lts.1",
+  // your existing dependencies...
+}
 }
