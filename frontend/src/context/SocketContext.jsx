@@ -5,6 +5,9 @@ import useAuth from '../hooks/useAuth';
 
 export const SocketContext = createContext();
 
+// Use environment variable for the API URL, with fallback to localhost for development
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState(new Map());
@@ -20,8 +23,10 @@ export const SocketProvider = ({ children }) => {
       return;
     }
     
-    // Initialize socket connection
-    const newSocket = io('http://localhost:5001', {
+    console.log(`Connecting to socket server at: ${API_BASE_URL}`);
+    
+    // Initialize socket connection with the environment variable
+    const newSocket = io(API_BASE_URL, {
       withCredentials: true,
     });
     
@@ -32,6 +37,10 @@ export const SocketProvider = ({ children }) => {
       console.log('Connected to socket server');
       // Emit user online event
       newSocket.emit('user_online', currentUser._id);
+    });
+    
+    newSocket.on('connect_error', (error) => {
+      console.error('Socket connection error:', error);
     });
     
     newSocket.on('user_status', ({ userId, status }) => {
