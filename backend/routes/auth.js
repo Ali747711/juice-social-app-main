@@ -1,11 +1,11 @@
 // routes/auth.js
-const TokenBlacklist = require('../models/TokenBlacklist');
 const express = require('express');
+const TokenBlacklist = require('./TokenBlacklist');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 const { body, validationResult } = require('express-validator');
-
+const TokenBlacklist = require('../models/TokenBlacklist');
 
 
 // Input validation middleware
@@ -39,7 +39,7 @@ const validatePasswordChange = [
   body('currentPassword').notEmpty().withMessage('Current password is required'),
   body('newPassword')
     .isLength({ min: 6 }).withMessage('New password must be at least 6 characters long')
-    .not().equals(body('currentPassword')).withMessage('New password must be different from current password')
+    .not().equals(body('currentPassword')).withMessage('New password must be different from current password'),
 ];
 
 const router = express.Router();
@@ -48,12 +48,12 @@ router.post('/register', validateRegistration, async (req, res) => {
   try {
     // Check for validation errors
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: 'Validation failed', 
-        errors: errors.array() 
-      });
-    }
+      if (!errors.isEmpty()) {
+          return res.status(400).json({
+              message: 'Validation failed',
+              errors: errors.array()
+          });
+      }
 
     const { username, email, password, fullName } = req.body;
     
@@ -112,12 +112,12 @@ router.post('/login', validateLogin, async (req, res) => {
   try {
     // Check for validation errors
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: 'Validation failed', 
-        errors: errors.array() 
-      });
-    }
+      if (!errors.isEmpty()) {
+          return res.status(400).json({
+              message: 'Validation failed',
+              errors: errors.array()
+          });
+      }
 
     const { username, password } = req.body;
     
@@ -247,12 +247,12 @@ router.put('/profile', auth, validateProfileUpdate, async (req, res) => {
   try {
     // Check for validation errors
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: 'Validation failed', 
-        errors: errors.array() 
-      });
-    }
+      if (!errors.isEmpty()) {
+          return res.status(400).json({
+              message: 'Validation failed',
+              errors: errors.array()
+          });
+      }
 
     const { fullName, bio, darkMode } = req.body;
     const updatedFields = {};
@@ -293,12 +293,12 @@ router.put('/change-password', auth, validatePasswordChange, async (req, res) =>
   try {
     // Check for validation errors
     const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-      return res.status(400).json({ 
-        message: 'Validation failed', 
-        errors: errors.array() 
-      });
-    }
+      if (!errors.isEmpty()) {
+          return res.status(400).json({
+              message: 'Validation failed',
+              errors: errors.array()
+          });
+      }
 
     const { currentPassword, newPassword } = req.body;
     
