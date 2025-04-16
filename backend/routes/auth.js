@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
 const { body, validationResult } = require('express-validator');
-const TokenBlacklist = require('../models/TokenBlacklist');
+
 
 
 // Input validation middleware
