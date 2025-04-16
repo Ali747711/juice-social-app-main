@@ -118,7 +118,7 @@ const Login = () => {
 
           <div className={styles.footer}>
             <p>
-              Don’t have an account?{' '}
+              Don`t have an account?{' '}
               <Link to="/register" className={styles.footerLink}>
                 Register
               </Link>

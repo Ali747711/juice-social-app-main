@@ -1,7 +1,8 @@
+
 {
-  "name": "juice-social-backend",
+  "name": "juice-backend",
   "version": "1.0.0",
-  "description": "Backend for Juice Social Media Application",
+  "description": "Backend for Juice social media application",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -14,8 +15,9 @@
     "dotenv": "^16.0.3",
     "emoji-mart": "^5.6.0",
     "express": "^4.18.2",
+    "express-validator": "^7.0.1",
     "jsonwebtoken": "^9.0.0",
-    "mongoose": "^7.0.3",
+    "mongoose": "^7.1.0",
     "multer": "^1.4.5-lts.1",
     "socket.io": "^4.6.1",
     "uuid": "^9.0.0"

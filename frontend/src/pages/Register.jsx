@@ -74,29 +74,31 @@ const Register = () => {
     setIsLoading(true);
     
     try {
-      const response = await axios.post('/api/auth/register', {
+      // Use the register function from useAuth
+      const result = await register({
         username: formData.username,
         email: formData.email,
         fullName: formData.fullName,
         password: formData.password
       });
-      
-      if (response.data.token) {
-        login(response.data.token, response.data.user);
-        navigate('/');
+  
+      if (result.success) {
+        // If registration is successful, you might want to automatically log in the user
+        // or navigate to a different page.
+        // For example, if your register function in AuthContext returns a user object:
+        // login(result.user); // Assuming your login function accepts a user object
+        navigate('/login'); // Or navigate to the home page
+      } else {
+        // Handle registration errors
+        setErrors({ general: result.error || 'Registration failed. Please try again.' });
       }
     } catch (error) {
       console.error('Registration error:', error);
-      
-      if (error.response?.data?.message) {
-        setErrors({ general: error.response.data.message });
-      } else {
-        setErrors({ general: 'Registration failed. Please try again.' });
-      }
+      setErrors({ general: 'Registration failed. Please try again.' });
     } finally {
       setIsLoading(false);
     }
-  };
+  };  
 
   return (
     <div className={`${styles.registerPage} ${darkMode ? styles.dark : ''}`}>

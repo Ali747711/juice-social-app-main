@@ -21,6 +21,9 @@ import {
 } from 'react-icons/fa';
 import styles from './Friends.module.css';
 
+// Import API_URLS for consistent API endpoint usage
+import { API_URLS } from '../utils/api';
+
 const Friends = () => {
   const { currentUser } = useAuth();
   const { isUserOnline } = useSocket();
@@ -41,7 +44,7 @@ const Friends = () => {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const res = await axios.get('/api/friends');
+        const res = await axios.get(API_URLS.getFriends);
         setFriends(res.data.friends);
       } catch (error) {
         console.error('Error fetching friends:', error);
@@ -57,7 +60,7 @@ const Friends = () => {
   useEffect(() => {
     const getReceivedRequests = async () => {
       try {
-        const res = await axios.get('/api/friends/requests');
+        const res = await axios.get(API_URLS.getReceivedRequests);
         setPendingReceivedRequests(res.data.requests);
       } catch (error) {
         console.error('Error fetching received requests:', error);
@@ -73,7 +76,7 @@ const Friends = () => {
   useEffect(() => {
     const getSentRequests = async () => {
       try {
-        const res = await axios.get('/api/friends/requests/sent');
+        const res = await axios.get(API_URLS.getSentRequests);
         setPendingSentRequests(res.data.requests);
       } catch (error) {
         console.error('Error fetching sent requests:', error);
@@ -92,7 +95,7 @@ const Friends = () => {
     setLoading(prev => ({ ...prev, search: true }));
     
     try {
-      const res = await axios.get(`/api/users/search?query=${searchQuery}`);
+      const res = await axios.get(`${API_URLS.searchUsers}?query=${searchQuery}`);
       setSearchResults(res.data.users);
     } catch (error) {
       console.error('Error searching users:', error);
@@ -115,7 +118,7 @@ const Friends = () => {
   // Send friend request
   const sendFriendRequest = async (userId) => {
     try {
-      await axios.post(`/api/friends/request/${userId}`);
+      await axios.post(`${API_URLS.sendFriendRequest}/${userId}`);
       
       // Update UI to show pending request
       const user = searchResults.find(user => user._id === userId);
@@ -135,7 +138,7 @@ const Friends = () => {
   // Accept friend request
   const acceptFriendRequest = async (requestId) => {
     try {
-      await axios.put(`/api/friends/request/${requestId}/accept`);
+      await axios.put(`${API_URLS.acceptFriendRequest}/${requestId}/accept`);
       
       // Find the request
       const request = pendingReceivedRequests.find(req => req._id === requestId);
@@ -152,7 +155,7 @@ const Friends = () => {
   // Reject friend request
   const rejectFriendRequest = async (requestId) => {
     try {
-      await axios.put(`/api/friends/request/${requestId}/reject`);
+      await axios.put(`${API_URLS.rejectFriendRequest}/${requestId}/reject`);
       
       // Update UI by removing the request
       setPendingReceivedRequests(prev => prev.filter(req => req._id !== requestId));
@@ -169,7 +172,7 @@ const Friends = () => {
       const request = pendingSentRequests.find(req => req.receiver._id === userId);
       
       if (request) {
-        await axios.delete(`/api/friends/request/${request._id}`);
+        await axios.delete(`${API_URLS.cancelFriendRequest}/${request._id}`);
         
         // Update UI by removing the request
         setPendingSentRequests(prev => prev.filter(req => req.receiver._id !== userId));
@@ -183,7 +186,7 @@ const Friends = () => {
   // Remove friend
   const removeFriend = async (friendId) => {
     try {
-      await axios.delete(`/api/friends/${friendId}`);
+      await axios.delete(`${API_URLS.removeFriend}/${friendId}`);
       
       // Update UI by removing the friend
       setFriends(prev => prev.filter(friend => friend._id !== friendId));

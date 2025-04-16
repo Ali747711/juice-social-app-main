@@ -1,7 +1,7 @@
 // context/AuthContext.jsx
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
-import API_BASE_URL from '../utils/api';
+import API_BASE_URL, { API_URLS } from '../utils/api';
 
 export const AuthContext = createContext();
 
@@ -27,7 +27,7 @@ export const AuthProvider = ({ children }) => {
   // Fetch current user data
   const fetchCurrentUser = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/api/auth/me`);
+      const res = await axios.get(API_URLS.getUser);
       setCurrentUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       setLoading(false);
@@ -42,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/register`, userData);
+      const res = await axios.post(API_URLS.register, userData);
       const { token, user } = res.data;
       
       localStorage.setItem('token', token);
@@ -64,7 +64,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (credentials) => {
     setLoading(true);
     try {
-      const res = await axios.post(`${API_BASE_URL}/api/auth/login`, credentials);
+      const res = await axios.post(API_URLS.login, credentials);
       const { token, user } = res.data;
       
       localStorage.setItem('token', token);
@@ -87,6 +87,7 @@ export const AuthProvider = ({ children }) => {
     try {
       // Call logout API if user is logged in
       if (currentUser) {
+        // Add a logout URL to your API_URLS object in api.js
         await axios.post(`${API_BASE_URL}/api/auth/logout`);
       }
     } catch (error) {
@@ -103,7 +104,7 @@ export const AuthProvider = ({ children }) => {
   const updateProfile = async (profileData) => {
     setLoading(true);
     try {
-      const res = await axios.put(`${API_BASE_URL}/api/auth/profile`, profileData);
+      const res = await axios.put(API_URLS.updateProfile, profileData);
       setCurrentUser(res.data.user);
       localStorage.setItem('user', JSON.stringify(res.data.user));
       setLoading(false);
@@ -119,6 +120,7 @@ export const AuthProvider = ({ children }) => {
   const changePassword = async (passwordData) => {
     setLoading(true);
     try {
+      // Add a changePassword URL to your API_URLS object in api.js
       await axios.put(`${API_BASE_URL}/api/auth/change-password`, passwordData);
       setLoading(false);
       return { success: true };

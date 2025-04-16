@@ -26,14 +26,13 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: [
-      'https://juice-social-yfc8ju2c-alis-projects-1ef90113.vercel.app',
-      'https://juice-social-app.vercel.app',
-      'http://localhost:5173'
-    ],
+      process.env.PROD_CLIENT_URL,
+      process.env.DEV_CLIENT_URL
+    ].filter(Boolean), // Filter out any undefined or empty values
     methods: ['GET', 'POST'],
     credentials: true
   }
-}); // Added closing bracket here
+});
 
 // Middleware
 app.use(express.json({ limit: '10mb' }));
@@ -42,10 +41,9 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 // Configure CORS for the REST API
 app.use(cors({
   origin: [
-    'https://juice-social-yfc8ju2c-alis-projects-1ef90113.vercel.app',  // Add your specific Vercel URL
-    'https://juice-social-app.vercel.app',
-    'http://localhost:5173'
-  ],
+    process.env.PROD_CLIENT_URL,
+    process.env.DEV_CLIENT_URL
+  ].filter(Boolean), // Filter out any undefined or empty values
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

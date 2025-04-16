@@ -24,6 +24,9 @@ import UserInfoPanel from '../components/ChatPage/UserInfoPanel';
 import EmojiPicker from '../components/ChatPage/EmojiPicker';
 import ChatInput from '../components/ChatPage/ChatInput';
 
+// Import API_URLS for consistent API endpoint usage
+import { API_URLS } from '../utils/api';
+
 import styles from './Chat.module.css';
 
 const Chat = () => {
@@ -72,7 +75,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchConversations = async () => {
       try {
-        const res = await axios.get('/api/messages');
+        const res = await axios.get(API_URLS.getConversations);
         setConversations(res.data.conversations);
       } catch (error) {
         console.error('Error fetching conversations:', error);
@@ -92,7 +95,7 @@ const Chat = () => {
           setLoading(prev => ({ ...prev, messages: true }));
           
           // Fetch user info
-          const userRes = await axios.get(`/api/users/${userId}`);
+          const userRes = await axios.get(`${API_URLS.getUserDetails}/${userId}`);
           setSelectedUser(userRes.data.user);
           
           // Fetch messages
@@ -113,7 +116,7 @@ const Chat = () => {
   // Fetch messages for a conversation
   const fetchMessages = async (userId) => {
     try {
-      const res = await axios.get(`/api/messages/${userId}`);
+      const res = await axios.get(`${API_URLS.getMessages}/${userId}`);
       setMessages(res.data.messages);
       setLoading(prev => ({ ...prev, messages: false }));
     } catch (error) {
@@ -180,7 +183,7 @@ const Chat = () => {
   // Mark message as read
   const markMessageAsRead = async (messageId) => {
     try {
-      await axios.put(`/api/messages/${messageId}/read`);
+      await axios.put(`${API_URLS.markMessageAsRead}/${messageId}/read`);
     } catch (error) {
       console.error('Error marking message as read:', error);
     }
@@ -271,7 +274,7 @@ const Chat = () => {
     
     try {
       console.log("Sending test upload request");
-      const response = await axios.post('/api/upload', formData, {
+      const response = await axios.post(API_URLS.uploadFiles, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
@@ -419,8 +422,8 @@ const Chat = () => {
         
         try {
           // Upload the files
-          console.log("Sending upload request to /api/upload");
-          const uploadResponse = await axios.post('/api/upload', formData, {
+          console.log("Sending upload request to API_URLS.uploadFiles");
+          const uploadResponse = await axios.post(API_URLS.uploadFiles, formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
