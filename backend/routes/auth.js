@@ -1,6 +1,5 @@
 // routes/auth.js
-import TokenBlacklist from './TokenBlacklist';
-
+const TokenBlacklist = require('../models/TokenBlacklist');
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
@@ -8,7 +7,6 @@ const auth = require('../middleware/auth');
 const { body, validationResult } = require('express-validator');
 const TokenBlacklist = require('../models/TokenBlacklist');
 
-const router = express.Router();
 
 // Input validation middleware
 const validateRegistration = [
@@ -44,6 +42,7 @@ const validatePasswordChange = [
     .not().equals(body('currentPassword')).withMessage('New password must be different from current password')
 ];
 
+const router = express.Router();
 // Register a new user
 router.post('/register', validateRegistration, async (req, res) => {
   try {
