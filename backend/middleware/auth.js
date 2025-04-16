@@ -1,7 +1,7 @@
 // middleware/auth.js
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.js');
-const TokenBlacklist = require('../models/TokenBlacklist.js');
+const TokenBlacklist = require('../routes/TokenBlacklist.js');
 
 /**
  * Authentication middleware to protect routes
