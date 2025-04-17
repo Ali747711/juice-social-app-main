@@ -1,14 +1,13 @@
 // pages/Friends.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Layout from '../components/Layout';
 import Card from '../components/Card';
 import Button from '../components/Button';
-import Input from '../components/Input';
 import Avatar from '../components/Avatar';
 import EmptyState from '../components/EmptyState';
 import useAuth from '../hooks/useAuth';
 import useSocket from '../hooks/useSocket';
-import axios from 'axios';
 import { 
   FaUserPlus, 
   FaUserCheck, 
@@ -17,16 +16,21 @@ import {
   FaEnvelope, 
   FaTimes, 
   FaUserFriends,
-  FaPaperPlane
+  FaPaperPlane,
+  FaExclamationTriangle,
+  FaSync
 } from 'react-icons/fa';
 import styles from './Friends.module.css';
 
-// Import API_URLS for consistent API endpoint usage
-import { API_URLS } from '../utils/api';
+// Import API utilities
+import { API_URLS, apiRequest, formatUrl } from '../utils/api';
 
 const Friends = () => {
   const { currentUser } = useAuth();
   const { isUserOnline } = useSocket();
+  const navigate = useNavigate();
+  
+  // State
   const [activeTab, setActiveTab] = useState('friends');
   const [friends, setFriends] = useState([]);
   const [pendingReceivedRequests, setPendingReceivedRequests] = useState([]);
@@ -39,68 +43,162 @@ const Friends = () => {
     sentRequests: true,
     search: false
   });
+  const [error, setError] = useState({
+    friends: null,
+    receivedRequests: null,
+    sentRequests: null,
+    search: null
+  });
   
-  // Fetch friends
+  // Refs for tracking mount status
+  const isMounted = useRef(true);
+  
+  // Clean up on unmount
   useEffect(() => {
-    const getFriends = async () => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+  
+  // Check backend health before loading data
+  useEffect(() => {
+    const checkBackendHealth = async () => {
       try {
-        const res = await axios.get(API_URLS.getFriends);
-        setFriends(res.data.friends);
+        await apiRequest('get', API_URLS.healthCheck);
+        console.log('Backend health check passed, proceeding with data loading');
+        loadAllData();
       } catch (error) {
-        console.error('Error fetching friends:', error);
-      } finally {
+        console.error('Backend health check failed:', error);
+        setError(prev => ({
+          ...prev,
+          friends: 'Could not connect to server. Please try again later.',
+          receivedRequests: 'Could not connect to server. Please try again later.',
+          sentRequests: 'Could not connect to server. Please try again later.'
+        }));
+        setLoading({
+          friends: false,
+          receivedRequests: false,
+          sentRequests: false,
+          search: false
+        });
+      }
+    };
+    
+    checkBackendHealth();
+  }, []);
+
+  // Load all data at once
+  const loadAllData = () => {
+    getFriends();
+    getReceivedRequests();
+    getSentRequests();
+  };
+  
+  // Fetch friends with retry logic
+  const getFriends = async () => {
+    if (!isMounted.current) return;
+    
+    setLoading(prev => ({ ...prev, friends: true }));
+    setError(prev => ({ ...prev, friends: null }));
+    
+    try {
+      const data = await apiRequest('get', API_URLS.getFriends);
+      if (isMounted.current) {
+        setFriends(data.data.friends || []);
+      }
+    } catch (error) {
+      console.error('Error fetching friends:', error);
+      if (isMounted.current) {
+        setError(prev => ({ 
+          ...prev, 
+          friends: 'Failed to load friends. Please try again.' 
+        }));
+      }
+    } finally {
+      if (isMounted.current) {
         setLoading(prev => ({ ...prev, friends: false }));
       }
-    };
-    
-    getFriends();
-  }, []);
+    }
+  };
   
   // Fetch received friend requests
-  useEffect(() => {
-    const getReceivedRequests = async () => {
-      try {
-        const res = await axios.get(API_URLS.getReceivedRequests);
-        setPendingReceivedRequests(res.data.requests);
-      } catch (error) {
-        console.error('Error fetching received requests:', error);
-      } finally {
+  const getReceivedRequests = async () => {
+    if (!isMounted.current) return;
+    
+    setLoading(prev => ({ ...prev, receivedRequests: true }));
+    setError(prev => ({ ...prev, receivedRequests: null }));
+    
+    try {
+      const data = await apiRequest('get', API_URLS.getReceivedRequests);
+      if (isMounted.current) {
+        setPendingReceivedRequests(data.data.requests || []);
+      }
+    } catch (error) {
+      console.error('Error fetching received requests:', error);
+      if (isMounted.current) {
+        setError(prev => ({ 
+          ...prev, 
+          receivedRequests: 'Failed to load friend requests. Please try again.' 
+        }));
+      }
+    } finally {
+      if (isMounted.current) {
         setLoading(prev => ({ ...prev, receivedRequests: false }));
       }
-    };
-    
-    getReceivedRequests();
-  }, []);
+    }
+  };
   
   // Fetch sent friend requests
-  useEffect(() => {
-    const getSentRequests = async () => {
-      try {
-        const res = await axios.get(API_URLS.getSentRequests);
-        setPendingSentRequests(res.data.requests);
-      } catch (error) {
-        console.error('Error fetching sent requests:', error);
-      } finally {
+  const getSentRequests = async () => {
+    if (!isMounted.current) return;
+    
+    setLoading(prev => ({ ...prev, sentRequests: true }));
+    setError(prev => ({ ...prev, sentRequests: null }));
+    
+    try {
+      const data = await apiRequest('get', API_URLS.getSentRequests);
+      if (isMounted.current) {
+        setPendingSentRequests(data.data.requests || []);
+      }
+    } catch (error) {
+      console.error('Error fetching sent requests:', error);
+      if (isMounted.current) {
+        setError(prev => ({ 
+          ...prev, 
+          sentRequests: 'Failed to load sent requests. Please try again.' 
+        }));
+      }
+    } finally {
+      if (isMounted.current) {
         setLoading(prev => ({ ...prev, sentRequests: false }));
       }
-    };
-    
-    getSentRequests();
-  }, []);
+    }
+  };
   
   // Handle search
   const handleSearch = async () => {
-    if (!searchQuery.trim()) return;
+    if (!searchQuery.trim() || !isMounted.current) return;
     
     setLoading(prev => ({ ...prev, search: true }));
+    setError(prev => ({ ...prev, search: null }));
     
     try {
-      const res = await axios.get(API_URLS.searchUsers, { params: { query: searchQuery } });
-      setSearchResults(res.data.users);
+      const data = await apiRequest('get', API_URLS.searchUsers, { query: searchQuery });
+      if (isMounted.current) {
+        setSearchResults(data.users || []);
+      }
     } catch (error) {
       console.error('Error searching users:', error);
+      if (isMounted.current) {
+        setError(prev => ({ 
+          ...prev, 
+          search: 'Search failed. Please try again.' 
+        }));
+      }
     } finally {
-      setLoading(prev => ({ ...prev, search: false }));
+      if (isMounted.current) {
+        setLoading(prev => ({ ...prev, search: false }));
+      }
     }
   };
   
@@ -117,8 +215,11 @@ const Friends = () => {
   
   // Send friend request
   const sendFriendRequest = async (userId) => {
+    if (!isMounted.current) return;
+    
     try {
-      await axios.post(API_URLS.sendFriendRequest.replace(':userId', userId)); //
+      const url = formatUrl(API_URLS.sendFriendRequest, { userId });
+      await apiRequest('post', url);
       
       // Update UI to show pending request
       const user = searchResults.find(user => user._id === userId);
@@ -131,14 +232,17 @@ const Friends = () => {
       setSearchResults(prev => prev.filter(user => user._id !== userId));
     } catch (error) {
       console.error('Error sending friend request:', error);
-      alert('Failed to send friend request');
+      alert('Failed to send friend request. Please try again.');
     }
   };
   
   // Accept friend request
   const acceptFriendRequest = async (requestId) => {
+    if (!isMounted.current) return;
+    
     try {
-      await axios.put(API_URLS.acceptFriendRequest.replace(':requestId', requestId)); //
+      const url = formatUrl(API_URLS.acceptFriendRequest, { requestId });
+      await apiRequest('put', url);
       
       // Find the request
       const request = pendingReceivedRequests.find(req => req._id === requestId);
@@ -148,53 +252,91 @@ const Friends = () => {
       setFriends(prev => [...prev, request.sender]);
     } catch (error) {
       console.error('Error accepting friend request:', error);
-      alert('Failed to accept friend request');
+      alert('Failed to accept friend request. Please try again.');
     }
   };
   
   // Reject friend request
   const rejectFriendRequest = async (requestId) => {
+    if (!isMounted.current) return;
+    
     try {
-      await axios.put(API_URLS.rejectFriendRequest.replace(':requestId', requestId)); //
+      const url = formatUrl(API_URLS.rejectFriendRequest, { requestId });
+      await apiRequest('put', url);
       
       // Update UI by removing the request
       setPendingReceivedRequests(prev => prev.filter(req => req._id !== requestId));
     } catch (error) {
       console.error('Error rejecting friend request:', error);
-      alert('Failed to reject friend request');
+      alert('Failed to reject friend request. Please try again.');
     }
   };
   
   // Cancel sent friend request
   const cancelFriendRequest = async (userId) => {
+    if (!isMounted.current) return;
+    
     try {
       // We need to find the request first to get its ID
       const request = pendingSentRequests.find(req => req.receiver._id === userId);
       
       if (request) {
-        await axios.delete(API_URLS.cancelFriendRequest.replace(':requestId', request._id)); //
+        const url = formatUrl(API_URLS.cancelFriendRequest, { requestId: request._id });
+        await apiRequest('delete', url);
         
         // Update UI by removing the request
         setPendingSentRequests(prev => prev.filter(req => req.receiver._id !== userId));
       }
     } catch (error) {
       console.error('Error canceling friend request:', error);
-      alert('Failed to cancel friend request');
+      alert('Failed to cancel friend request. Please try again.');
     }
   };
   
   // Remove friend
   const removeFriend = async (friendId) => {
+    if (!isMounted.current) return;
+    
     try {
-      await axios.delete(API_URLS.removeFriend.replace(':friendId', friendId)); //
+      const url = formatUrl(API_URLS.removeFriend, { friendId });
+      await apiRequest('delete', url);
       
       // Update UI by removing the friend
       setFriends(prev => prev.filter(friend => friend._id !== friendId));
     } catch (error) {
       console.error('Error removing friend:', error);
-      alert('Failed to remove friend');
+      alert('Failed to remove friend. Please try again.');
     }
   };
+  
+  // Handle retry when loading fails
+  const handleRetry = (section) => {
+    if (section === 'friends') {
+      getFriends();
+    } else if (section === 'receivedRequests') {
+      getReceivedRequests();
+    } else if (section === 'sentRequests') {
+      getSentRequests();
+    } else if (section === 'search') {
+      handleSearch();
+    } else {
+      // Retry all
+      loadAllData();
+    }
+  };
+  
+  // Error display component
+  const ErrorDisplay = ({ message, onRetry }) => (
+    <div className={styles.errorContainer}>
+      <FaExclamationTriangle className={styles.errorIcon} />
+      <p className={styles.errorMessage}>{message}</p>
+      {onRetry && (
+        <Button onClick={onRetry} variant="secondary" size="sm">
+          <FaSync className="mr-1" /> Retry
+        </Button>
+      )}
+    </div>
+  );
   
   return (
     <Layout>
@@ -224,7 +366,14 @@ const Friends = () => {
             </Button>
           </form>
           
-          {searchQuery && searchResults.length > 0 && (
+          {error.search && (
+            <ErrorDisplay 
+              message={error.search} 
+              onRetry={() => handleRetry('search')} 
+            />
+          )}
+          
+          {searchQuery && searchResults.length > 0 && !error.search && (
             <div className={styles.searchResults}>
               <h3 className={styles.searchResultsTitle}>
                 Search Results
@@ -255,7 +404,7 @@ const Friends = () => {
             </div>
           )}
           
-          {searchQuery && searchResults.length === 0 && !loading.search && (
+          {searchQuery && searchResults.length === 0 && !loading.search && !error.search && (
             <div className={styles.searchResults}>
               <EmptyState
                 type="search"
@@ -302,6 +451,11 @@ const Friends = () => {
                   <div className="inline-block animate-spin h-8 w-8 border-4 border-gray-300 border-t-juice-primary rounded-full mb-2"></div>
                   <p>Loading your friends...</p>
                 </div>
+              ) : error.friends ? (
+                <ErrorDisplay 
+                  message={error.friends} 
+                  onRetry={() => handleRetry('friends')} 
+                />
               ) : friends.length > 0 ? (
                 <div className={styles.friendsList}>
                   {friends.map(friend => (
@@ -326,7 +480,7 @@ const Friends = () => {
                       <div className={styles.actions}>
                         <button
                           className={styles.messageButton}
-                          onClick={() => window.location.href = `/chat/${friend._id}`}
+                          onClick={() => navigate(`/chat/${friend._id}`)}
                         >
                           <FaEnvelope className={styles.buttonIcon} />
                           Message
@@ -359,6 +513,11 @@ const Friends = () => {
                   <div className="inline-block animate-spin h-8 w-8 border-4 border-gray-300 border-t-juice-primary rounded-full mb-2"></div>
                   <p>Loading friend requests...</p>
                 </div>
+              ) : error.receivedRequests ? (
+                <ErrorDisplay 
+                  message={error.receivedRequests} 
+                  onRetry={() => handleRetry('receivedRequests')} 
+                />
               ) : pendingReceivedRequests.length > 0 ? (
                 <div className={styles.requestsList}>
                   {pendingReceivedRequests.map(request => (
@@ -412,6 +571,11 @@ const Friends = () => {
                   <div className="inline-block animate-spin h-8 w-8 border-4 border-gray-300 border-t-juice-primary rounded-full mb-2"></div>
                   <p>Loading sent requests...</p>
                 </div>
+              ) : error.sentRequests ? (
+                <ErrorDisplay 
+                  message={error.sentRequests} 
+                  onRetry={() => handleRetry('sentRequests')} 
+                />
               ) : pendingSentRequests.length > 0 ? (
                 <div className={styles.requestsList}>
                   {pendingSentRequests.map(request => (
