@@ -1,5 +1,6 @@
 // routes/friends.js
 const express = require('express');
+const mongoose = require('mongoose'); // Add mongoose import
 const FriendRequest = require('../models/FriendRequest');
 const User = require('../models/User');
 const auth = require('../middleware/auth');
@@ -24,8 +25,53 @@ const validateFriendIdParams = [
     .isMongoId().withMessage('Invalid friend ID format')
 ];
 
+// Rate limiter middleware to prevent overloading the server
+const rateLimiter = (limit = 10, windowMs = 60000) => {
+  const requests = new Map();
+  
+  return (req, res, next) => {
+    const ip = req.ip;
+    const now = Date.now();
+    
+    // Initialize or clean up IP entry
+    if (!requests.has(ip)) {
+      requests.set(ip, []);
+    }
+    
+    // Clean up old requests
+    const userRequests = requests.get(ip).filter(time => now - time < windowMs);
+    
+    // Check if limit exceeded
+    if (userRequests.length >= limit) {
+      return sendError(
+        res,
+        'Too many requests, please try again later',
+        'RATE_LIMIT_EXCEEDED',
+        null,
+        429
+      );
+    }
+    
+    // Add current request
+    userRequests.push(now);
+    requests.set(ip, userRequests);
+    
+    next();
+  };
+};
+
+// Apply rate limiter to the router
+router.use(rateLimiter(30, 60000)); // 30 requests per minute
+
+// Error handler middleware
+const asyncHandler = (fn) => (req, res, next) => {
+  Promise.resolve(fn(req, res, next)).catch(next);
+};
+
 // Send friend request
-router.post('/request/:userId', auth, validateRequestParams, async (req, res) => {
+router.post('/request/:userId', auth, validateRequestParams, asyncHandler(async (req, res) => {
+  let session;
+  
   try {
     // Check validation results
     const errors = validationResult(req);
@@ -51,15 +97,22 @@ router.post('/request/:userId', auth, validateRequestParams, async (req, res) =>
       return sendError(res, 'You are already friends with this user', 'ALREADY_FRIENDS');
     }
     
+    // Start a session for transaction safety
+    session = await mongoose.startSession();
+    session.startTransaction();
+
     // Check if there's already a pending request
     const existingRequest = await FriendRequest.findOne({
       $or: [
         { sender: req.userId, receiver: receiverId },
         { sender: receiverId, receiver: req.userId }
       ]
-    });
+    }).session(session);
     
     if (existingRequest) {
+      await session.abortTransaction();
+      session.endSession();
+      
       if (existingRequest.status === 'pending') {
         // Check if the current user is the receiver of an existing request
         if (existingRequest.receiver.toString() === req.userId.toString()) {
@@ -85,7 +138,11 @@ router.post('/request/:userId', auth, validateRequestParams, async (req, res) =>
       receiver: receiverId
     });
     
-    await friendRequest.save();
+    await friendRequest.save({ session });
+    
+    // Commit the transaction
+    await session.commitTransaction();
+    session.endSession();
     
     // Populate sender info to return
     await friendRequest.populate('sender', '-password');
@@ -98,6 +155,12 @@ router.post('/request/:userId', auth, validateRequestParams, async (req, res) =>
       201
     );
   } catch (error) {
+    // Rollback transaction if it exists
+    if (session) {
+      await session.abortTransaction();
+      session.endSession();
+    }
+    
     console.error('Send friend request error:', error);
     
     // Handle duplicate key error (unique index violation)
@@ -113,17 +176,18 @@ router.post('/request/:userId', auth, validateRequestParams, async (req, res) =>
       500
     );
   }
-});
+}));
 
 // Get all friend requests (received)
-router.get('/requests', auth, async (req, res) => {
+router.get('/requests', auth, asyncHandler(async (req, res) => {
   try {
     const requests = await FriendRequest.find({
       receiver: req.userId,
       status: 'pending'
     })
     .populate('sender', '-password')
-    .sort({ createdAt: -1 }); // Show newest requests first
+    .sort({ createdAt: -1 }) // Show newest requests first
+    .exec(); // Explicitly execute to catch errors
     
     return sendSuccess(res, 'Friend requests retrieved', { requests });
   } catch (error) {
@@ -136,17 +200,18 @@ router.get('/requests', auth, async (req, res) => {
       500
     );
   }
-});
+}));
 
 // Get all sent friend requests
-router.get('/requests/sent', auth, async (req, res) => {
+router.get('/requests/sent', auth, asyncHandler(async (req, res) => {
   try {
     const requests = await FriendRequest.find({
       sender: req.userId,
       status: 'pending'
     })
     .populate('receiver', '-password')
-    .sort({ createdAt: -1 }); // Show newest requests first
+    .sort({ createdAt: -1 }) // Show newest requests first
+    .exec(); // Explicitly execute to catch errors
     
     return sendSuccess(res, 'Sent friend requests retrieved', { requests });
   } catch (error) {
@@ -159,10 +224,12 @@ router.get('/requests/sent', auth, async (req, res) => {
       500
     );
   }
-});
+}));
 
 // Accept a friend request
-router.put('/request/:requestId/accept', auth, validateRequestIdParams, async (req, res) => {
+router.put('/request/:requestId/accept', auth, validateRequestIdParams, asyncHandler(async (req, res) => {
+  let session;
+  
   try {
     // Check validation results
     const errors = validationResult(req);
@@ -200,7 +267,7 @@ router.put('/request/:requestId/accept', auth, validateRequestIdParams, async (r
     }
     
     // Start a session for transaction
-    const session = await mongoose.startSession();
+    session = await mongoose.startSession();
     session.startTransaction();
     
     try {
@@ -212,17 +279,18 @@ router.put('/request/:requestId/accept', auth, validateRequestIdParams, async (r
       await User.findByIdAndUpdate(
         request.sender, 
         { $addToSet: { friends: request.receiver } },
-        { session }
+        { session, new: true }
       );
       
       await User.findByIdAndUpdate(
         request.receiver, 
         { $addToSet: { friends: request.sender } },
-        { session }
+        { session, new: true }
       );
       
       // Commit the transaction
       await session.commitTransaction();
+      session.endSession();
       
       // Get updated sender info to return
       const sender = await User.findById(request.sender).select('-password');
@@ -231,12 +299,16 @@ router.put('/request/:requestId/accept', auth, validateRequestIdParams, async (r
     } catch (txError) {
       // If anything fails, abort the transaction
       await session.abortTransaction();
-      throw txError;
-    } finally {
-      // End the session
       session.endSession();
+      throw txError;
     }
   } catch (error) {
+    // Ensure session is ended even if there was an error
+    if (session) {
+      await session.abortTransaction();
+      session.endSession();
+    }
+    
     console.error('Accept friend request error:', error);
     return sendError(
       res, 
@@ -246,10 +318,10 @@ router.put('/request/:requestId/accept', auth, validateRequestIdParams, async (r
       500
     );
   }
-});
+}));
 
 // Reject a friend request
-router.put('/request/:requestId/reject', auth, validateRequestIdParams, async (req, res) => {
+router.put('/request/:requestId/reject', auth, validateRequestIdParams, asyncHandler(async (req, res) => {
   try {
     // Check validation results
     const errors = validationResult(req);
@@ -301,10 +373,10 @@ router.put('/request/:requestId/reject', auth, validateRequestIdParams, async (r
       500
     );
   }
-});
+}));
 
 // Cancel a friend request (sent by the current user)
-router.delete('/request/:requestId', auth, validateRequestIdParams, async (req, res) => {
+router.delete('/request/:requestId', auth, validateRequestIdParams, asyncHandler(async (req, res) => {
   try {
     // Check validation results
     const errors = validationResult(req);
@@ -355,30 +427,41 @@ router.delete('/request/:requestId', auth, validateRequestIdParams, async (req, 
       500
     );
   }
-});
+}));
 
 // Get all friends
-router.get('/', auth, async (req, res) => {
+router.get('/', auth, asyncHandler(async (req, res) => {
   try {
-    const user = await User.findById(req.userId)
-      .populate('friends', '-password')
-      .select('friends');
+    // Get user with populated friends with a timeout
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Database query timeout')), 10000)
+    );
     
-    return sendSuccess(res, 'Friends retrieved', { friends: user.friends });
+    const userPromise = User.findById(req.userId)
+      .populate('friends', '-password')
+      .select('friends')
+      .exec();
+    
+    // Race between query and timeout
+    const user = await Promise.race([userPromise, timeoutPromise]);
+    
+    return sendSuccess(res, 'Friends retrieved', { friends: user.friends || [] });
   } catch (error) {
     console.error('Get friends error:', error);
     return sendError(
       res, 
-      'Failed to retrieve friends', 
+      error.message === 'Database query timeout' 
+        ? 'Request timed out. Please try again.' 
+        : 'Failed to retrieve friends', 
       'SERVER_ERROR', 
       null, 
       500
     );
   }
-});
+}));
 
 // Get friend suggestions (users who are not friends or have pending requests)
-router.get('/suggestions', auth, async (req, res) => {
+router.get('/suggestions', auth, asyncHandler(async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
     
@@ -425,10 +508,10 @@ router.get('/suggestions', auth, async (req, res) => {
       500
     );
   }
-});
+}));
 
 // Check friend status with a specific user
-router.get('/status/:userId', auth, validateRequestParams, async (req, res) => {
+router.get('/status/:userId', auth, validateRequestParams, asyncHandler(async (req, res) => {
   try {
     // Check validation results
     const errors = validationResult(req);
@@ -493,10 +576,12 @@ router.get('/status/:userId', auth, validateRequestParams, async (req, res) => {
       500
     );
   }
-});
+}));
 
 // Remove a friend
-router.delete('/:friendId', auth, validateFriendIdParams, async (req, res) => {
+router.delete('/:friendId', auth, validateFriendIdParams, asyncHandler(async (req, res) => {
+  let session;
+  
   try {
     // Check validation results
     const errors = validationResult(req);
@@ -519,7 +604,7 @@ router.delete('/:friendId', auth, validateFriendIdParams, async (req, res) => {
     }
     
     // Start a session for transaction
-    const session = await mongoose.startSession();
+    session = await mongoose.startSession();
     session.startTransaction();
     
     try {
@@ -527,14 +612,14 @@ router.delete('/:friendId', auth, validateFriendIdParams, async (req, res) => {
       await User.findByIdAndUpdate(
         req.userId,
         { $pull: { friends: friendId } },
-        { session }
+        { session, new: true }
       );
       
       // Remove current user from friend's friends list
       await User.findByIdAndUpdate(
         friendId,
         { $pull: { friends: req.userId } },
-        { session }
+        { session, new: true }
       );
       
       // Also remove any friend requests between them
@@ -547,17 +632,22 @@ router.delete('/:friendId', auth, validateFriendIdParams, async (req, res) => {
       
       // Commit the transaction
       await session.commitTransaction();
+      session.endSession();
       
       return sendSuccess(res, 'Friend removed successfully');
     } catch (txError) {
       // If anything fails, abort the transaction
       await session.abortTransaction();
-      throw txError;
-    } finally {
-      // End the session
       session.endSession();
+      throw txError;
     }
   } catch (error) {
+    // Ensure session is ended even if there was an error
+    if (session) {
+      await session.abortTransaction();
+      session.endSession();
+    }
+    
     console.error('Remove friend error:', error);
     return sendError(
       res, 
@@ -567,6 +657,6 @@ router.delete('/:friendId', auth, validateFriendIdParams, async (req, res) => {
       500
     );
   }
-});
+}));
 
 module.exports = router;
