@@ -1,7 +1,10 @@
 // src/utils/api.js
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://juice-social-app.onrender.com';
+// Determine the API base URL based on environment
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+
+console.log('API Base URL:', API_BASE_URL); // Debug which URL is being used
 
 // Create an axios instance with default config
 export const axiosInstance = axios.create({
@@ -116,11 +119,13 @@ export const apiRequest = async (method, url, data = null, options = {}) => {
   throw lastError;
 };
 
+// API endpoint URLs relative to the base URL
 export const API_URLS = {
   // Auth endpoints
   login: `/api/auth/login`,
   register: `/api/auth/register`,
   logout: `/api/auth/logout`,
+  getCurrentUser: `/api/auth/me`,
   
   // User endpoints
   getUser: `/api/users/me`,
