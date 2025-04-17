@@ -44,7 +44,7 @@ const Friends = () => {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const res = await axios.get(API_URLS.getFriends.replace('', ''));//
+        const res = await axios.get(API_URLS.getFriends);
         setFriends(res.data.friends);
       } catch (error) {
         console.error('Error fetching friends:', error);
@@ -60,7 +60,7 @@ const Friends = () => {
   useEffect(() => {
     const getReceivedRequests = async () => {
       try {
-        const res = await axios.get(API_URLS.getReceivedRequests.replace('', '')); //
+        const res = await axios.get(API_URLS.getReceivedRequests);
         setPendingReceivedRequests(res.data.requests);
       } catch (error) {
         console.error('Error fetching received requests:', error);
@@ -76,7 +76,7 @@ const Friends = () => {
   useEffect(() => {
     const getSentRequests = async () => {
       try {
-        const res = await axios.get(API_URLS.getSentRequests.replace('', '')); //
+        const res = await axios.get(API_URLS.getSentRequests);
         setPendingSentRequests(res.data.requests);
       } catch (error) {
         console.error('Error fetching sent requests:', error);
@@ -95,7 +95,9 @@ const Friends = () => {
     setLoading(prev => ({ ...prev, search: true }));
     
     try {
-      const res = await axios.get(`${API_URLS.searchUsers}?query=${searchQuery}`);
+      const res = await axios.get(API_URLS.searchUsers, {
+        params: { query: searchQuery },
+      });
       setSearchResults(res.data.users);
     } catch (error) {
       console.error('Error searching users:', error);
