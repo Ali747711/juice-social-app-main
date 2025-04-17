@@ -16,7 +16,7 @@ const Register = () => {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, register } = useAuth(); // Fix: Import register from useAuth
   const { darkMode, toggleDarkMode } = useTheme || {}; // Use this if you have dark mode
 
   const handleChange = (e) => {
