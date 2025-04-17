@@ -95,9 +95,7 @@ const Friends = () => {
     setLoading(prev => ({ ...prev, search: true }));
     
     try {
-      const res = await axios.get(API_URLS.searchUsers, {
-        params: { query: searchQuery },
-      });
+      const res = await axios.get(API_URLS.searchUsers, { params: { query: searchQuery } });
       setSearchResults(res.data.users);
     } catch (error) {
       console.error('Error searching users:', error);
