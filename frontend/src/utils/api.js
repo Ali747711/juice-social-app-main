@@ -7,6 +7,7 @@ export const API_URLS = {
   getUser: `${API_BASE_URL}/api/users/me`,
   updateProfile: `${API_BASE_URL}/api/users/update`,
   getFriends: `${API_BASE_URL}/api/friends/list`,
+  searchUsers: `${API_BASE_URL}/api/users/search`, // Add this line
   // Add all other API endpoints
 };
 
