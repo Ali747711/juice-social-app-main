@@ -44,7 +44,7 @@ const Friends = () => {
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const res = await axios.get(API_URLS.getFriends);
+        const res = await axios.get(API_URLS.getFriends);//
         setFriends(res.data.friends);
       } catch (error) {
         console.error('Error fetching friends:', error);
@@ -60,7 +60,7 @@ const Friends = () => {
   useEffect(() => {
     const getReceivedRequests = async () => {
       try {
-        const res = await axios.get(API_URLS.getReceivedRequests);
+        const res = await axios.get(API_URLS.getReceivedRequests); //
         setPendingReceivedRequests(res.data.requests);
       } catch (error) {
         console.error('Error fetching received requests:', error);
@@ -76,7 +76,7 @@ const Friends = () => {
   useEffect(() => {
     const getSentRequests = async () => {
       try {
-        const res = await axios.get(API_URLS.getSentRequests);
+        const res = await axios.get(API_URLS.getSentRequests); //
         setPendingSentRequests(res.data.requests);
       } catch (error) {
         console.error('Error fetching sent requests:', error);
@@ -118,7 +118,7 @@ const Friends = () => {
   // Send friend request
   const sendFriendRequest = async (userId) => {
     try {
-      await axios.post(`${API_URLS.sendFriendRequest}/${userId}`);
+      await axios.post(API_URLS.sendFriendRequest.replace(':userId', userId)); //
       
       // Update UI to show pending request
       const user = searchResults.find(user => user._id === userId);
@@ -138,7 +138,7 @@ const Friends = () => {
   // Accept friend request
   const acceptFriendRequest = async (requestId) => {
     try {
-      await axios.put(`${API_URLS.acceptFriendRequest}/${requestId}/accept`);
+      await axios.put(API_URLS.acceptFriendRequest.replace(':requestId', requestId)); //
       
       // Find the request
       const request = pendingReceivedRequests.find(req => req._id === requestId);
@@ -155,7 +155,7 @@ const Friends = () => {
   // Reject friend request
   const rejectFriendRequest = async (requestId) => {
     try {
-      await axios.put(`${API_URLS.rejectFriendRequest}/${requestId}/reject`);
+      await axios.put(API_URLS.rejectFriendRequest.replace(':requestId', requestId)); //
       
       // Update UI by removing the request
       setPendingReceivedRequests(prev => prev.filter(req => req._id !== requestId));
@@ -172,7 +172,7 @@ const Friends = () => {
       const request = pendingSentRequests.find(req => req.receiver._id === userId);
       
       if (request) {
-        await axios.delete(`${API_URLS.cancelFriendRequest}/${request._id}`);
+        await axios.delete(API_URLS.cancelFriendRequest.replace(':requestId', request._id)); //
         
         // Update UI by removing the request
         setPendingSentRequests(prev => prev.filter(req => req.receiver._id !== userId));
@@ -186,7 +186,7 @@ const Friends = () => {
   // Remove friend
   const removeFriend = async (friendId) => {
     try {
-      await axios.delete(`${API_URLS.removeFriend}/${friendId}`);
+      await axios.delete(API_URLS.removeFriend.replace(':friendId', friendId)); //
       
       // Update UI by removing the friend
       setFriends(prev => prev.filter(friend => friend._id !== friendId));
