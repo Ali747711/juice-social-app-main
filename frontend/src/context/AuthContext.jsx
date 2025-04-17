@@ -10,12 +10,21 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   
+  // Axios Request Interceptor
+  axios.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  }, (error) => {
+    return Promise.reject(error);
+  });
   // Initialize with stored token and user
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
-    const storedToken = localStorage.getItem('token');
-    
-    if (storedUser && storedToken) {
+    const storedToken = localStorage.getItem('token');    
+    if (storedUser && storedToken) {      
       setCurrentUser(JSON.parse(storedUser));
       axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
       fetchCurrentUser();
@@ -47,8 +56,7 @@ export const AuthProvider = ({ children }) => {
       
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-      
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            
       setCurrentUser(user);
       setError(null);
       setLoading(false);
@@ -69,9 +77,8 @@ export const AuthProvider = ({ children }) => {
       
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
-      
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setCurrentUser(user);
+           setCurrentUser(user);
+
       setError(null);
       setLoading(false);
       return { success: true };
