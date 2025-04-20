@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 // Determine the API base URL based on environment
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+// Use the production URL as fallback instead of localhost
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://juice-social-app.onrender.com';
 
 console.log('API Base URL:', API_BASE_URL); // Debug which URL is being used
 
@@ -161,12 +162,21 @@ export const API_URLS = {
 
 // Helper function to format URLs with parameters
 export const formatUrl = (url, params) => {
+  if (!params) return url;
+  
   let formattedUrl = url;
-  if (params) {
-    Object.keys(params).forEach(key => {
+  Object.keys(params).forEach(key => {
+    // Only replace if the parameter exists and is not undefined or null
+    if (params[key] !== undefined && params[key] !== null) {
       formattedUrl = formattedUrl.replace(`:${key}`, params[key]);
-    });
+    }
+  });
+  
+  // Check if all parameters were replaced
+  if (formattedUrl.includes(':')) {
+    console.warn('URL still contains parameters after formatting:', formattedUrl);
   }
+  
   return formattedUrl;
 };
 
