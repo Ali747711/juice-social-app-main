@@ -18,7 +18,8 @@ import {
   FaUserFriends,
   FaPaperPlane,
   FaExclamationTriangle,
-  FaSync
+  FaSync,
+  FaInfoCircle
 } from 'react-icons/fa';
 import styles from './Friends.module.css';
 
@@ -44,6 +45,7 @@ const Friends = () => {
     search: false
   });
   const [error, setError] = useState({
+    general: null,
     friends: null,
     receivedRequests: null,
     sentRequests: null,
@@ -68,19 +70,14 @@ const Friends = () => {
         console.log('Backend health check passed, proceeding with data loading');
         loadAllData();
       } catch (error) {
-        console.error('Backend health check failed:', error);
+        console.warn('Initial backend health check failed:', error);
+        // Proceed with loading data anyway, but display a general warning
         setError(prev => ({
           ...prev,
-          friends: 'Could not connect to server. Please try again later.',
-          receivedRequests: 'Could not connect to server. Please try again later.',
-          sentRequests: 'Could not connect to server. Please try again later.'
+          general: 'Experiencing connection issues. Some data might not load correctly. You can try refreshing the page.'
         }));
-        setLoading({
-          friends: false,
-          receivedRequests: false,
-          sentRequests: false,
-          search: false
-        });
+        // Still attempt to load data despite health check failure
+        loadAllData();
       }
     };
     
@@ -99,12 +96,13 @@ const Friends = () => {
     if (!isMounted.current) return;
     
     setLoading(prev => ({ ...prev, friends: true }));
-    setError(prev => ({ ...prev, friends: null }));
+    setError(prev => ({ ...prev, friends: null })); // Clear error before attempting to load
     
     try {
       const data = await apiRequest('get', API_URLS.getFriends);
       if (isMounted.current) {
-        setFriends(data.data.friends || []);
+        setFriends(data.data?.friends || []);
+        setError(prev => ({ ...prev, friends: null })); // Explicitly clear error on success
       }
     } catch (error) {
       console.error('Error fetching friends:', error);
@@ -126,12 +124,13 @@ const Friends = () => {
     if (!isMounted.current) return;
     
     setLoading(prev => ({ ...prev, receivedRequests: true }));
-    setError(prev => ({ ...prev, receivedRequests: null }));
+    setError(prev => ({ ...prev, receivedRequests: null })); // Clear error before attempting to load
     
     try {
       const data = await apiRequest('get', API_URLS.getReceivedRequests);
       if (isMounted.current) {
-        setPendingReceivedRequests(data.data.requests || []);
+        setPendingReceivedRequests(data.data?.requests || []);
+        setError(prev => ({ ...prev, receivedRequests: null })); // Explicitly clear error on success
       }
     } catch (error) {
       console.error('Error fetching received requests:', error);
@@ -153,12 +152,13 @@ const Friends = () => {
     if (!isMounted.current) return;
     
     setLoading(prev => ({ ...prev, sentRequests: true }));
-    setError(prev => ({ ...prev, sentRequests: null }));
+    setError(prev => ({ ...prev, sentRequests: null })); // Clear error before attempting to load
     
     try {
       const data = await apiRequest('get', API_URLS.getSentRequests);
       if (isMounted.current) {
-        setPendingSentRequests(data.data.requests || []);
+        setPendingSentRequests(data.data?.requests || []);
+        setError(prev => ({ ...prev, sentRequests: null })); // Explicitly clear error on success
       }
     } catch (error) {
       console.error('Error fetching sent requests:', error);
@@ -180,12 +180,13 @@ const Friends = () => {
     if (!searchQuery.trim() || !isMounted.current) return;
     
     setLoading(prev => ({ ...prev, search: true }));
-    setError(prev => ({ ...prev, search: null }));
+    setError(prev => ({ ...prev, search: null })); // Clear error before attempting to load
     
     try {
       const data = await apiRequest('get', API_URLS.searchUsers, { query: searchQuery });
       if (isMounted.current) {
         setSearchResults(data.users || []);
+        setError(prev => ({ ...prev, search: null })); // Explicitly clear error on success
       }
     } catch (error) {
       console.error('Error searching users:', error);
@@ -215,7 +216,7 @@ const Friends = () => {
   
   // Send friend request
   const sendFriendRequest = async (userId) => {
-    if (!isMounted.current) return;
+    if (!isMounted.current || !userId) return;
     
     try {
       const url = formatUrl(API_URLS.sendFriendRequest, { userId });
@@ -223,13 +224,17 @@ const Friends = () => {
       
       // Update UI to show pending request
       const user = searchResults.find(user => user._id === userId);
-      setPendingSentRequests(prev => [
-        ...prev,
-        { receiver: user, status: 'pending' }
-      ]);
-      
-      // Remove from search results
-      setSearchResults(prev => prev.filter(user => user._id !== userId));
+      if (user) {
+        setPendingSentRequests(prev => [
+          ...prev,
+          { receiver: user, status: 'pending' }
+        ]);
+        
+        // Remove from search results
+        setSearchResults(prev => prev.filter(user => user._id !== userId));
+      } else {
+        console.warn('User not found in search results after sending request');
+      }
     } catch (error) {
       console.error('Error sending friend request:', error);
       alert('Failed to send friend request. Please try again.');
@@ -238,7 +243,7 @@ const Friends = () => {
   
   // Accept friend request
   const acceptFriendRequest = async (requestId) => {
-    if (!isMounted.current) return;
+    if (!isMounted.current || !requestId) return;
     
     try {
       const url = formatUrl(API_URLS.acceptFriendRequest, { requestId });
@@ -247,9 +252,16 @@ const Friends = () => {
       // Find the request
       const request = pendingReceivedRequests.find(req => req._id === requestId);
       
-      // Update UI by removing the request and adding to friends
-      setPendingReceivedRequests(prev => prev.filter(req => req._id !== requestId));
-      setFriends(prev => [...prev, request.sender]);
+      if (request && request.sender) {
+        // Update UI by removing the request and adding to friends
+        setPendingReceivedRequests(prev => prev.filter(req => req._id !== requestId));
+        setFriends(prev => [...prev, request.sender]);
+      } else {
+        console.warn('Request or sender not found after accepting');
+        // Refresh requests to sync UI with server
+        getReceivedRequests();
+        getFriends();
+      }
     } catch (error) {
       console.error('Error accepting friend request:', error);
       alert('Failed to accept friend request. Please try again.');
@@ -258,7 +270,7 @@ const Friends = () => {
   
   // Reject friend request
   const rejectFriendRequest = async (requestId) => {
-    if (!isMounted.current) return;
+    if (!isMounted.current || !requestId) return;
     
     try {
       const url = formatUrl(API_URLS.rejectFriendRequest, { requestId });
@@ -274,18 +286,23 @@ const Friends = () => {
   
   // Cancel sent friend request
   const cancelFriendRequest = async (userId) => {
-    if (!isMounted.current) return;
+    if (!isMounted.current || !userId) return;
     
     try {
       // We need to find the request first to get its ID
-      const request = pendingSentRequests.find(req => req.receiver._id === userId);
+      const request = pendingSentRequests.find(req => req.receiver && req.receiver._id === userId);
       
-      if (request) {
+      if (request && request._id) {
         const url = formatUrl(API_URLS.cancelFriendRequest, { requestId: request._id });
         await apiRequest('delete', url);
         
         // Update UI by removing the request
-        setPendingSentRequests(prev => prev.filter(req => req.receiver._id !== userId));
+        setPendingSentRequests(prev => prev.filter(req => req.receiver && req.receiver._id === userId));
+      } else {
+        console.error('Could not find request ID for user:', userId);
+        alert('Failed to cancel friend request. Could not find request details.');
+        // Refresh sent requests to sync UI with server
+        getSentRequests();
       }
     } catch (error) {
       console.error('Error canceling friend request:', error);
@@ -295,7 +312,7 @@ const Friends = () => {
   
   // Remove friend
   const removeFriend = async (friendId) => {
-    if (!isMounted.current) return;
+    if (!isMounted.current || !friendId) return;
     
     try {
       const url = formatUrl(API_URLS.removeFriend, { friendId });
@@ -319,6 +336,10 @@ const Friends = () => {
       getSentRequests();
     } else if (section === 'search') {
       handleSearch();
+    } else if (section === 'general') {
+      // Clear general error and retry all data loading
+      setError(prev => ({ ...prev, general: null }));
+      loadAllData();
     } else {
       // Retry all
       loadAllData();
@@ -337,11 +358,32 @@ const Friends = () => {
       )}
     </div>
   );
+
+  // Warning display component
+  const WarningDisplay = ({ message, onRetry }) => (
+    <div className={styles.warningContainer}>
+      <FaInfoCircle className={styles.warningIcon} />
+      <p className={styles.warningMessage}>{message}</p>
+      {onRetry && (
+        <Button onClick={onRetry} variant="secondary" size="sm">
+          <FaSync className="mr-1" /> Retry
+        </Button>
+      )}
+    </div>
+  );
   
   return (
     <Layout>
       <div className={styles.container}>
         <h1 className={styles.title}>Friends</h1>
+        
+        {/* Global Warning/Error */}
+        {error.general && (
+          <WarningDisplay 
+            message={error.general} 
+            onRetry={() => handleRetry('general')} 
+          />
+        )}
         
         {/* Search Section */}
         <Card>
@@ -579,29 +621,33 @@ const Friends = () => {
               ) : pendingSentRequests.length > 0 ? (
                 <div className={styles.requestsList}>
                   {pendingSentRequests.map(request => (
-                    <div key={request._id || request.receiver._id} className={styles.requestItem}>
-                      <div className={styles.friendInfo}>
-                        <div className={styles.friendAvatar}>
-                          <Avatar user={request.receiver} />
-                        </div>
-                        <div className={styles.friendDetails}>
-                          <p className={styles.friendName}>
-                            {request.receiver.fullName}
-                          </p>
-                          <p className={styles.friendUsername}>
-                            @{request.receiver.username}
-                          </p>
-                        </div>
-                      </div>
-                      <div className={styles.actions}>
-                        <button
-                          className={styles.removeButton}
-                          onClick={() => cancelFriendRequest(request.receiver._id)}
-                        >
-                          <FaTimes className={styles.buttonIcon} />
-                          Cancel
-                        </button>
-                      </div>
+                    <div key={request._id || (request.receiver && request.receiver._id)} className={styles.requestItem}>
+                      {request.receiver && (
+                        <>
+                          <div className={styles.friendInfo}>
+                            <div className={styles.friendAvatar}>
+                              <Avatar user={request.receiver} />
+                            </div>
+                            <div className={styles.friendDetails}>
+                              <p className={styles.friendName}>
+                                {request.receiver.fullName}
+                              </p>
+                              <p className={styles.friendUsername}>
+                                @{request.receiver.username}
+                              </p>
+                            </div>
+                          </div>
+                          <div className={styles.actions}>
+                            <button
+                              className={styles.removeButton}
+                              onClick={() => cancelFriendRequest(request.receiver._id)}
+                            >
+                              <FaTimes className={styles.buttonIcon} />
+                              Cancel
+                            </button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
